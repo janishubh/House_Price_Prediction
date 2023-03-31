@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>House Price Prediction</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <!-- <style>
+      body {
+        background-image: url("../images/bg-house.jpg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+        background-color: grey;
+        background-blend-mode: multiply;
+        position: absolute;
+        z-index: -100;
+      }
+      .main {
+        z-index: 100;
+        position: relative;
+      }
+    </style> -->
+  </head>
+  <body>
+    <div class="navigationBar">
+      <nav class="navbar navbar-expand-lg bg-danger">
+        <div class="container-fluid">
+          <a
+            class="navbar-brand"
+            href="#"
+            >Navbar</a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+          >
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  aria-current="page"
+                  href="#"
+                  >Dashboard</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#"
+                  >Buy price prediction</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#"
+                  >Rent price prediction</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="#"
+                  >Help</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="Mainform bg-secondary p-5 m-5">
+      <h1>Buy Price Form</h1>
+      <div class="form">
+        <form method="POST">
+          <div class="mb-3">
+            <label
+              for="exampleDataList"
+              class="form-label"
+              >City</label
+            >
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              name="city"
+              id="city"
+              required="1"
+            >
+              <option selected>select city</option>
+              {% for city in cities %}
+              <option value="{{city}}">{{city}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label
+              for="exampleDataList"
+              class="form-label"
+              >location</label
+            >
+            <select
+              class="form-select"
+              name="location"
+              id="location"
+              required="1"
+              aria-label="Default select example"
+            >
+              <option selected>select location</option>
+              {% for location in locations %}
+              <option value="{{location}}">{{location}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label
+              class="form-check-label"
+              for="exampleCheck1"
+              >BHK</label
+            >
+            <select
+              class="form-select"
+              name="bhk"
+              id="bhk"
+              required="1"
+              aria-label="Default select example"
+            >
+              <option selected>Open this select menu</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label
+              class="form-check-label"
+              for="exampleCheck1"
+              >Area</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="area"
+              name="area"
+              required="1"
+            />
+          </div>
+          <div class="mb-3">
+            <label
+              class="form-check-label"
+              for="exampleCheck1"
+              >resale</label
+            >
+            <select
+              class="form-select"
+              name="resale"
+              id="resale"
+              required="1"
+              aria-label="Default select example"
+            >
+              <option selected>Open this select menu</option>
+              <option value="1">yes</option>
+              <option value="2">no</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            onclick="send_data()"
+          >
+            Predict price
+          </button>
+          <div>
+            <h2><span id="prediction"></span></h2>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function form_handler(event) {
+        event.preventDefault();
+      }
+
+      function send_data() {
+        document
+          .querySelector("form")
+          .addEventListener("sumbit", form_handler(event));
+
+        var form_data = new FormData(document.querySelector("form"));
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/predict", true);
+        document.getElementById("prediction").innerHTML =
+          "please wait predicting the price...";
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+            document.getElementById("prediction").innerHTML =
+              "prediction : ₹ " + xhr.responseText;
+          }
+        };
+
+        xhr.onload = function () {};
+        xhr.send(form_data);
+      }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
